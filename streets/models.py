@@ -11,6 +11,7 @@ class NycStreet(models.Model):
     type = models.CharField(max_length=50)
     geom = models.MultiPolygonField(srid=26918)
 
+
     def __str__(self):
         return self.name
 

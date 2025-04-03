@@ -20,8 +20,8 @@ class NycStreetListCreateAPIView(APIView):
         serializer = NycStreetSerializer(neigh, many=True)
         return Response(serializer.data)
 
-def map_view(request):
-    street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=1)
+def map_view(request, id):
+    street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)
     print(street.__dict__)
     serializer = NycStreetSerializer(street)
     print(serializer.data)

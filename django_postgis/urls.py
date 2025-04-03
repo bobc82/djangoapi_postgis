@@ -26,5 +26,5 @@ urlpatterns = [
     path("neighborhoods/",NycNeighborhoodListCreateAPIView.as_view(),name="neighborhoods"),
     path("neighborhood/<int:pk>/",NycNeighborhoodDetail.as_view(),name="neighborhood"),
     path("streets/",NycStreetListCreateAPIView.as_view(),name="streets"),
-    path('map/streets/', streets.views.map_view, name='map_streets'),
+    path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
 ]

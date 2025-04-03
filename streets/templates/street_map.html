@@ -24,8 +24,10 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        var raw_data = '{{street.geom|escapejs}}';
-        var json_data = JSON.parse(raw_data)
+        var raw_geom = '{{street.geog|escapejs}}'
+        console.log(raw_geom);
+
+        var json_data = JSON.parse(raw_geom)
         console.log(json_data)
         var myStyle = {
             "color": "#0000ff",

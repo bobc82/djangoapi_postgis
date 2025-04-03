@@ -8,6 +8,7 @@ from streets.models import NycStreetSerializer
 from django.template import loader
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.gis.db.models.functions import Transform
 
 # Create your views here.
 
@@ -20,7 +21,8 @@ class NycStreetListCreateAPIView(APIView):
         return Response(serializer.data)
 
 def map_view(request):
-    street = NycStreet.objects.get(gid=1)
+    street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=1)
+    print(street.__dict__)
     serializer = NycStreetSerializer(street)
     print(serializer.data)
     template = loader.get_template('street_map.html')

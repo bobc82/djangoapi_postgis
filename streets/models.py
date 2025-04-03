@@ -11,15 +11,23 @@ class NycStreet(models.Model):
     type = models.CharField(max_length=50)
     geom = models.MultiPolygonField(srid=26918)
 
-
+    '''
     def __str__(self):
         return self.name
+    '''
 
     class Meta:
         db_table = 'nyc_streets'
 
 
 class NycStreetSerializer(serializers.ModelSerializer):
+    geog = serializers.SerializerMethodField()
+
     class Meta:
         model = NycStreet
-        fields = "__all__"
+        fields = ('gid', 'name', 'geom', 'geog')  # Add the additional field
+
+    def get_geog(self, obj):
+        if obj.geom:
+            return obj.geom.transform(4326, clone=True).geojson  # Convert to GeoJSON
+        return None

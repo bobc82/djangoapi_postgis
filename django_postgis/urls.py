@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import neighborhoods.views
 import streets.views
 from neighborhoods.views import NycNeighborhoodListCreateAPIView, NycNeighborhoodDetail
 from streets.views import NycStreetListCreateAPIView
@@ -27,4 +28,5 @@ urlpatterns = [
     path("neighborhood/<int:pk>/",NycNeighborhoodDetail.as_view(),name="neighborhood"),
     path("streets/",NycStreetListCreateAPIView.as_view(),name="streets"),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
+    path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),
 ]

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoDjango Map</title>
+    <meta charset="utf-8" />
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+</head>
+<body>
+    <h1>Map of Locations {{neigh.name}}</h1>
+    <div id="map" style="height: 500px;"></div>
+    <!-- Include Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <script>
+        var map = L.map('map').setView([40.758700379161006, -73.95652770996094], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var raw_geom = '{{neigh.geog|escapejs}}'
+        console.log(raw_geom);
+
+        var json_data = JSON.parse(raw_geom)
+        console.log(json_data)
+        var myStyle = {
+            "color": "#0000ff",
+            "weight": 5,
+            "opacity": 1
+        };
+        L.geoJSON(json_data, {style: myStyle}).addTo(map);
+    </script>
+</body>
+</html>

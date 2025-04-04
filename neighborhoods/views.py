@@ -6,6 +6,10 @@ from rest_framework.views import APIView
 from neighborhoods.models import NycNeighborhood
 from neighborhoods.models import NycNeighborhoodSerializer
 
+from django.contrib.gis.db.models.functions import Transform
+from django.template import loader
+from django.http import HttpResponse
+
 # Create your views here.
 
 class NycNeighborhoodListCreateAPIView(APIView):
@@ -38,3 +42,14 @@ class NycNeighborhoodDetail(APIView):
         neigh = self.get_object(pk)
         neigh.delete()
         return Response({"message":"deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+def map_neigh_view(request, id):
+    neigh = NycNeighborhood.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)
+    print(neigh.__dict__)
+    serializer = NycNeighborhoodSerializer(neigh)
+    print(serializer.data)
+    template = loader.get_template('neigh_map.html')
+    context = {
+        'neigh': serializer.data,
+    }
+    return HttpResponse(template.render(context, request))

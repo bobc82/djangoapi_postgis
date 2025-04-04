@@ -15,6 +15,13 @@ class NycNeighborhood(models.Model):
         db_table = 'nyc_neighborhoods'
 
 class NycNeighborhoodSerializer(serializers.ModelSerializer):
+    geog = serializers.SerializerMethodField()
+
     class Meta:
         model = NycNeighborhood
-        fields = "__all__"
+        fields = ('gid', 'name', 'boroname', 'geom', 'geog')
+
+    def get_geog(self, obj):
+        if obj.geom:
+            return obj.geom.transform(4326, clone=True).geojson  # Convert to GeoJSON
+        return None

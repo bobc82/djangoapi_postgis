@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'rest_framework_gis',
     'neighborhoods',
-    'streets'
+    'streets',
+    'subway_stations'
 ]
 
 MIDDLEWARE = [

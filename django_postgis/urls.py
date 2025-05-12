@@ -21,12 +21,14 @@ import neighborhoods.views
 import streets.views
 from neighborhoods.views import NycNeighborhoodListCreateAPIView, NycNeighborhoodDetail
 from streets.views import NycStreetListCreateAPIView
+from subway_stations.views import NycSubwayStationsListCreateAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("neighborhoods/",NycNeighborhoodListCreateAPIView.as_view(),name="neighborhoods"),
     path("neighborhood/<int:pk>/",NycNeighborhoodDetail.as_view(),name="neighborhood"),
     path("streets/",NycStreetListCreateAPIView.as_view(),name="streets"),
+    path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
     path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),
 ]

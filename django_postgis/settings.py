@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'neighborhoods',
     'streets',
     'subway_stations',
-    'census_blocks'
+    'census_blocks',
+    'census_sociodata'
 ]
 
 MIDDLEWARE = [

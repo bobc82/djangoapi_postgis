@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'neighborhoods',
     'streets',
-    'subway_stations'
+    'subway_stations',
+    'census_blocks'
 ]
 
 MIDDLEWARE = [

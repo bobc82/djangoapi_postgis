@@ -25,7 +25,7 @@ class NycStreetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NycStreet
-        fields = ('gid', 'name', 'geom', 'geog')  # Add the additional field
+        fields = ('gid', 'name', 'oneway', 'type', 'geom', 'geog')  # Add the additional field
 
     def get_geog(self, obj):
         if obj.geom:

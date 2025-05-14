@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from neighborhoods.models import NycNeighborhood
 from neighborhoods.models import NycNeighborhoodSerializer
 
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.db.models.functions import Area
 from django.template import loader
@@ -53,6 +55,14 @@ class NycNeighborhoodArea(APIView):
         #    neigh_area_p = obj.area.sq_m
         #return Response({'area':neigh_area_p})
         return Response({'area': neigh_area[0].area.sq_m})
+
+class NycNeighborhoodIntersects(APIView):
+
+    def get(self, request):
+        neigh_intersects = NycNeighborhood.objects.filter(geom__intersects=(Point(583571, 4506714, srid=26918),
+                                                                            D(m=10))).values('name', 'boroname')
+        print(neigh_intersects)
+        return Response(neigh_intersects)
 
 
 def map_neigh_view(request, id):

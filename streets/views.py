@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.db.models.functions import Length
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -25,11 +26,14 @@ class NycStreetLength(APIView):
 
     def get(self, request):
         street_length = NycStreet.objects.filter(name="Pelham St")[:1].annotate(length=Length('geom'))
-        #street_length_p = 0
-        #for obj in street_length:
-        #    street_length_p = obj.length.m
-        #return Response({'l':street_length_p})
         return Response({'l': street_length[0].length.m})
+
+class NycStreetTotalLength(APIView):
+
+    def get(self, request):
+        street_length = NycStreet.objects.annotate(length=Length('geom')).aggregate(Sum("length"))
+        print(street_length)
+        return Response({'l': street_length['length__sum'].m})
 
 def map_view(request, id):
     street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)

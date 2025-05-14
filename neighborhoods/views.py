@@ -48,10 +48,11 @@ class NycNeighborhoodArea(APIView):
 
     def get(self, request):
         neigh_area = NycNeighborhood.objects.filter(name="West Village")[:1].annotate(area=Area('geom'))
-        neigh_area_p = 0
-        for obj in neigh_area:
-            neigh_area_p = obj.area.sq_m
-        return Response({'area':neigh_area_p})
+        #neigh_area_p = 0
+        #for obj in neigh_area:
+        #    neigh_area_p = obj.area.sq_m
+        #return Response({'area':neigh_area_p})
+        return Response({'area': neigh_area[0].area.sq_m})
 
 
 def map_neigh_view(request, id):

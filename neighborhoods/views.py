@@ -7,6 +7,7 @@ from neighborhoods.models import NycNeighborhood
 from neighborhoods.models import NycNeighborhoodSerializer
 
 from django.contrib.gis.db.models.functions import Transform
+from django.contrib.gis.db.models.functions import Area
 from django.template import loader
 from django.http import HttpResponse
 
@@ -42,6 +43,16 @@ class NycNeighborhoodDetail(APIView):
         neigh = self.get_object(pk)
         neigh.delete()
         return Response({"message":"deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+class NycNeighborhoodArea(APIView):
+
+    def get(self, request):
+        neigh_area = NycNeighborhood.objects.filter(name="West Village")[:1].annotate(area=Area('geom'))
+        neigh_area_p = 0
+        for obj in neigh_area:
+            neigh_area_p = obj.area.sq_m
+        return Response({'area':neigh_area_p})
+
 
 def map_neigh_view(request, id):
     neigh = NycNeighborhood.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)

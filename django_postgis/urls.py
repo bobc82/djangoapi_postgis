@@ -24,11 +24,13 @@ from streets.views import NycStreetListCreateAPIView
 from subway_stations.views import NycSubwayStationsListCreateAPIView
 from census_blocks.views import NycCensusBlocksListCreateAPIView
 from census_blocks.views import NycPopulationAPIView
+from neighborhoods.views import NycNeighborhoodArea
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("neighborhoods/",NycNeighborhoodListCreateAPIView.as_view(),name="neighborhoods"),
+    path("neighborhoodArea/",NycNeighborhoodArea.as_view(),name="neighborhood_area"),
     path("neighborhood/<int:pk>/",NycNeighborhoodDetail.as_view(),name="neighborhood"),
     path("streets/",NycStreetListCreateAPIView.as_view(),name="streets"),
     path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),

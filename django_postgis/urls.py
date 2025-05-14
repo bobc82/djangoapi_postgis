@@ -23,6 +23,7 @@ from neighborhoods.views import NycNeighborhoodListCreateAPIView, NycNeighborhoo
 from streets.views import NycStreetListCreateAPIView
 from streets.views import NycStreetLength
 from streets.views import NycStreetTotalLength
+from streets.views import NycStreetFilterWithin
 from subway_stations.views import NycSubwayStationsListCreateAPIView
 from census_blocks.views import NycCensusBlocksListCreateAPIView
 from census_blocks.views import NycPopulationAPIView
@@ -36,6 +37,7 @@ urlpatterns = [
     path("neighborhood/<int:pk>/",NycNeighborhoodDetail.as_view(),name="neighborhood"),
     path("streets/",NycStreetListCreateAPIView.as_view(),name="streets"),
     path("streetLength/",NycStreetLength.as_view(),name="street_length"),
+    path("streetWithin/",NycStreetFilterWithin.as_view(),name="street_within"),
     path("streetTotalLength/", NycStreetTotalLength.as_view(), name="street_total_length"),
     path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),
     path("censusBlocks/",NycCensusBlocksListCreateAPIView.as_view(),name="census_blocks"),

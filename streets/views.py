@@ -1,3 +1,5 @@
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -34,6 +36,13 @@ class NycStreetTotalLength(APIView):
         street_length = NycStreet.objects.annotate(length=Length('geom')).aggregate(Sum("length"))
         print(street_length)
         return Response({'l': street_length['length__sum'].m})
+
+class NycStreetFilterWithin(APIView):
+
+    def get(self, request):
+        streets_within = NycStreet.objects.filter(geom__dwithin=(Point(583571, 4506714, srid=26918), D(m=10))).values_list('name')
+        print(streets_within)
+        return Response(streets_within)
 
 def map_view(request, id):
     street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)

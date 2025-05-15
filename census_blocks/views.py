@@ -27,7 +27,7 @@ class NycPopulationAPIView(APIView):
 class NycCensusNeighPopulation(APIView):
 
     def get(self, request):
-        neighborhoods = NycNeighborhood.objects.filter(boroname='Manhattan')
+        neighborhoods = NycNeighborhood.objects.filter(boroname='Manhattan').order_by('name')
 
         population_list = []
         for n in neighborhoods:

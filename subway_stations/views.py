@@ -39,3 +39,11 @@ class FindNeighborhoodsInSubway(APIView):
 
 
         return Response(list_neigh)
+
+class NycSubwayGetGeog(APIView):
+
+    def get(self, request):
+        station_geog = NycSubwayStations.objects.get(name='Broad St')
+        serializer = NycSubwayStationsSerializer(station_geog, many=False)
+        print(serializer.data)
+        return Response({'geog': serializer.data['geog']})

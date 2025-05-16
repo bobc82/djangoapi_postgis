@@ -44,6 +44,13 @@ class NycStreetFilterWithin(APIView):
         print(streets_within)
         return Response(streets_within)
 
+class NycStreetGeometryValue(APIView):
+
+    def get(self, request):
+        street = NycStreet.objects.get(name='Atlantic Commons').geom
+        print(street)
+        return Response({'geom':str(street)})
+
 def map_view(request, id):
     street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)
     print(street.__dict__)

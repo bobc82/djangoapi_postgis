@@ -1,4 +1,5 @@
 from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import LineString
 from django.contrib.gis.measure import D
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -13,6 +14,7 @@ from django.shortcuts import render
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.db.models.functions import Length
 from django.db.models import Sum
+from django.db.models import Count
 
 # Create your views here.
 
@@ -72,6 +74,21 @@ class NycStreetGeometryValue(APIView):
         street = NycStreet.objects.get(name='Atlantic Commons').geom
         print(street)
         return Response({'geom':str(street)})
+
+class NycStreetsIntersectMeridian(APIView):
+    '''
+    SELECT Count(*)
+    FROM nyc_streets
+    WHERE ST_Intersects(
+      ST_Transform(geom, 4326),
+      'SRID=4326;LINESTRING(-74 20, -74 60)'
+      );
+    '''
+    def get(self, request):
+        count_meridian = NycStreet.objects.annotate(geog=Transform('geom', 4326)).filter(geog__intersects=LineString((-74, 20), (-74, 60), srid=4326)).count()
+        print(count_meridian)
+        return Response({'count': count_meridian})
+
 
 def map_view(request, id):
     street = NycStreet.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)

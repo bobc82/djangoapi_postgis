@@ -47,7 +47,11 @@ class NycNeighborhoodDetail(APIView):
         return Response({"message":"deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 class NycNeighborhoodArea(APIView):
-
+    '''
+      SELECT ST_Area(geom)
+      FROM nyc_neighborhoods
+      WHERE name = 'West Village';
+    '''
     def get(self, request):
         neigh_area = NycNeighborhood.objects.filter(name="West Village")[:1].annotate(area=Area('geom'))
         #neigh_area_p = 0
@@ -57,7 +61,11 @@ class NycNeighborhoodArea(APIView):
         return Response({'area': neigh_area[0].area.sq_m})
 
 class NycNeighborhoodIntersects(APIView):
-
+    '''
+    SELECT name, boroname
+    FROM nyc_neighborhoods
+    WHERE ST_Intersects(geom, ST_GeomFromText('POINT(583571 4506714)',26918));
+    '''
     def get(self, request):
         neigh_intersects = NycNeighborhood.objects.filter(geom__intersects=(Point(583571, 4506714, srid=26918),
                                                                             D(m=10))).values('name', 'boroname')

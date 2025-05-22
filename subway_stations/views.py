@@ -8,6 +8,7 @@ from subway_stations.models import NycSubwayStations
 from subway_stations.models import NycSubwayStationsSerializer
 from neighborhoods.models import NycNeighborhood
 from django.db.models import F
+import json
 
 class NycSubwayStationsListCreateAPIView(APIView):
 
@@ -60,4 +61,4 @@ class NycSubwayGetGeog(APIView):
         station_geog = NycSubwayStations.objects.get(name='Broad St')
         serializer = NycSubwayStationsSerializer(station_geog, many=False)
         print(serializer.data)
-        return Response({'geog': serializer.data['geog']})
+        return Response({'geog': json.loads(serializer.data['geog'])})

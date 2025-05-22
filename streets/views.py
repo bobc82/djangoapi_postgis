@@ -36,7 +36,7 @@ class NycStreetLength(APIView):
 
 class NycStreetTotalLength(APIView):
     '''
-    SELECT Sum(ST_Length(geom)) / 1000
+    SELECT Sum(ST_Length(geom))
     FROM nyc_streets;
     '''
     def get(self, request):

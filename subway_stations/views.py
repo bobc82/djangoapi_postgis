@@ -18,7 +18,16 @@ class NycSubwayStationsListCreateAPIView(APIView):
         return Response(serializer.data)
 
 class FindNeighborhoodsInSubway(APIView):
-
+    '''
+    SELECT
+      subways.name AS subway_name,
+      neighborhoods.name AS neighborhood_name,
+      neighborhoods.boroname AS borough
+    FROM nyc_neighborhoods AS neighborhoods
+    JOIN nyc_subway_stations AS subways
+    ON ST_Contains(neighborhoods.geom, subways.geom)
+    WHERE subways.name = 'Broad St';
+    '''
     def get(self, request):
         # Get the subway station named 'Broad St'
         station = NycSubwayStations.objects.get(name='Broad St')
@@ -41,7 +50,12 @@ class FindNeighborhoodsInSubway(APIView):
         return Response(list_neigh)
 
 class NycSubwayGetGeog(APIView):
-
+    '''
+        SELECT
+        geog
+        FROM nyc_subway_station
+        WHERE name = 'Broad St';
+    '''
     def get(self, request):
         station_geog = NycSubwayStations.objects.get(name='Broad St')
         serializer = NycSubwayStationsSerializer(station_geog, many=False)

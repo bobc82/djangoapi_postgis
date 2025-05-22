@@ -25,7 +25,16 @@ class NycPopulationAPIView(APIView):
         return Response(population)
 
 class NycCensusNeighPopulation(APIView):
-
+    '''
+    SELECT
+      neighborhoods.name,
+      Sum(census.popn_total) AS population,
+        FROM nyc_neighborhoods AS neighborhoods
+        JOIN nyc_census_blocks AS census
+        ON ST_Intersects(neighborhoods.geom, census.geom)
+        WHERE neighborhoods.boroname = 'Manhattan'
+        GROUP BY neighborhoods.name
+    '''
     def get(self, request):
         neighborhoods = NycNeighborhood.objects.filter(boroname='Manhattan').order_by('name')
 

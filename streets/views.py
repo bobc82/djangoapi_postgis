@@ -25,27 +25,49 @@ class NycStreetListCreateAPIView(APIView):
         return Response(serializer.data)
 
 class NycStreetLength(APIView):
-
+    '''
+      SELECT ST_Length(geom)
+      FROM nyc_streets
+      WHERE name = 'Columbus Cir';
+    '''
     def get(self, request):
         street_length = NycStreet.objects.filter(name="Pelham St")[:1].annotate(length=Length('geom'))
         return Response({'l': street_length[0].length.m})
 
 class NycStreetTotalLength(APIView):
-
+    '''
+    SELECT Sum(ST_Length(geom)) / 1000
+    FROM nyc_streets;
+    '''
     def get(self, request):
         street_length = NycStreet.objects.annotate(length=Length('geom')).aggregate(Sum("length"))
         print(street_length)
         return Response({'l': street_length['length__sum'].m})
 
 class NycStreetFilterWithin(APIView):
-
+    '''
+    SELECT name
+    FROM nyc_streets
+    WHERE ST_DWithin(
+            geom,
+            ST_GeomFromText('POINT(583571 4506714)',26918),
+            10
+          );
+    '''
     def get(self, request):
         streets_within = NycStreet.objects.filter(geom__dwithin=(Point(583571, 4506714, srid=26918), D(m=10))).values_list('name')
         print(streets_within)
         return Response(streets_within)
 
 class NycStreetGeometryValue(APIView):
-
+    '''
+    SELECT
+    ST_AsText(geom)
+    FROM
+    nyc_streets
+    WHERE
+    name = 'Atlantic Commons';
+    '''
     def get(self, request):
         street = NycStreet.objects.get(name='Atlantic Commons').geom
         print(street)

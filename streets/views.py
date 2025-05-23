@@ -19,6 +19,9 @@ from django.db.models import Count
 from django.core.serializers import serialize
 import json
 
+from subway_stations.models import NycSubwayStations
+
+
 # Create your views here.
 
 class NycStreetListCreateAPIView(APIView):
@@ -104,10 +107,39 @@ class NycStreetsNearest(APIView):
     LIMIT 3;
     '''
     def get(self, request):
-        nearest_streets = NycStreet.objects.annotate(dist=GeometryDistance('geom', Point(583571.9, 4506714.3, srid=26918)), geog=Transform('geom', 4326)).order_by('dist')[:5]
+        nearest_streets = NycStreet.objects.annotate(dist=GeometryDistance('geom', Point(583571.9, 4506714.3, srid=26918)), geog=Transform('geom', 4326)).order_by('dist')[:3]
         geojson = serialize('geojson', nearest_streets, geometry_field='geom', fields=('gid', 'name', 'geom', 'dist'))
         print(geojson)
         return Response(json.loads(geojson))
+
+class NycStreetsNearestAll(APIView):
+    '''
+    SELECT subways.gid AS subway_gid,
+       subways.name AS subway,
+       streets.name AS street,
+       streets.gid AS street_gid,
+       streets.geom::geometry(MultiLinestring, 26918) AS street_geom,
+       streets.dist
+    FROM nyc_subway_stations subways
+    CROSS JOIN LATERAL (
+      SELECT streets.name, streets.geom, streets.gid, streets.geom <-> subways.geom AS dist
+      FROM nyc_streets AS streets
+      ORDER BY dist
+      LIMIT 1
+    ) streets;
+    '''
+    def get(self, request):
+        stations_all = NycSubwayStations.objects.values_list('gid', 'name', 'geom')
+        #print(stations_all)
+        nearest_streets_list = []
+        for station in stations_all:
+            print(station)
+            nearest_s = NycStreet.objects.annotate(dist=GeometryDistance('geom', station[2], srid=26918)).order_by('dist')[:1]
+            geojson_nearest = serialize('geojson', nearest_s, geometry_field='geom',
+                                fields=('gid', 'name', 'geom', 'dist'))
+            print(geojson_nearest)
+            nearest_streets_list.append({'subway_gid':station[0], 'subway':station[1], 'street':json.loads(geojson_nearest)})
+        return Response(nearest_streets_list)
 
 
 def map_view(request, id):

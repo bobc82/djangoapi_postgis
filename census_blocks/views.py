@@ -47,3 +47,18 @@ class NycCensusNeighPopulation(APIView):
             population_list.append({'name': n.name, 'population':census_blocks['popn_total__sum']})
 
         return Response(population_list)
+
+    def post(self, request):
+        print(request.data)
+        boroname_input = request.data['boroname']
+        neighborhoods = NycNeighborhood.objects.filter(boroname=boroname_input).order_by('name')
+
+        population_list = []
+        for n in neighborhoods:
+            # print({'name':n.name})
+            census_blocks = NycCensusBlocks.objects.filter(geom__intersects=n.geom).aggregate(Sum('popn_total'))
+            # for c in census_blocks:
+            print(census_blocks)
+            population_list.append({'name': n.name, 'population': census_blocks['popn_total__sum']})
+
+        return Response(population_list)

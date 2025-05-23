@@ -1,3 +1,4 @@
+from PIL.ImtImagePlugin import field
 from django.contrib.gis.geos import Point
 from django.contrib.gis.geos import LineString
 from django.contrib.gis.measure import D
@@ -11,10 +12,12 @@ from streets.models import NycStreetSerializer
 from django.template import loader
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.gis.db.models.functions import Transform
+from django.contrib.gis.db.models.functions import Transform, GeometryDistance
 from django.contrib.gis.db.models.functions import Length
 from django.db.models import Sum
 from django.db.models import Count
+from django.core.serializers import serialize
+import json
 
 # Create your views here.
 
@@ -88,6 +91,23 @@ class NycStreetsIntersectMeridian(APIView):
         count_meridian = NycStreet.objects.annotate(geog=Transform('geom', 4326)).filter(geog__intersects=LineString((-74, 20), (-74, 60), srid=4326)).count()
         print(count_meridian)
         return Response({'count': count_meridian})
+
+class NycStreetsNearest(APIView):
+    '''
+    SELECT streets.gid, streets.name,
+      ST_Transform(streets.geom, 4326),
+      streets.geom <-> 'SRID=26918;POINT(583571.9 4506714.3)'::geometry AS dist
+    FROM
+      nyc_streets streets
+    ORDER BY
+      dist
+    LIMIT 3;
+    '''
+    def get(self, request):
+        nearest_streets = NycStreet.objects.annotate(dist=GeometryDistance('geom', Point(583571.9, 4506714.3, srid=26918)), geog=Transform('geom', 4326)).order_by('dist')[:5]
+        geojson = serialize('geojson', nearest_streets, geometry_field='geom', fields=('gid', 'name', 'geom', 'dist'))
+        print(geojson)
+        return Response(json.loads(geojson))
 
 
 def map_view(request, id):

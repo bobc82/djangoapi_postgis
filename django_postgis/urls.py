@@ -26,12 +26,10 @@ from streets.views import NycStreetTotalLength
 from streets.views import NycStreetFilterWithin
 from streets.views import NycStreetGeometryValue
 from streets.views import NycStreetsIntersectMeridian
+from streets.views import NycStreetsNearest
 from subway_stations.views import NycSubwayStationsListCreateAPIView
 from subway_stations.views import FindNeighborhoodsInSubway
 from subway_stations.views import NycSubwayGetGeog
-from census_blocks.views import NycCensusBlocksListCreateAPIView
-from census_blocks.views import NycPopulationAPIView
-from census_blocks.views import NycCensusNeighPopulation
 from neighborhoods.views import NycNeighborhoodArea
 from neighborhoods.views import NycNeighborhoodIntersects
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
@@ -48,6 +46,7 @@ urlpatterns = [
     path("streetGeom/", NycStreetGeometryValue.as_view(), name="street_geom"),
     path("streetTotalLength/", NycStreetTotalLength.as_view(), name="street_total_length"),
     path("streetIntersects/", NycStreetsIntersectMeridian.as_view(), name="street_intersects"),
+    path("streetNearest/", NycStreetsNearest.as_view(), name="street_nearest"),
     path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),
     path("subwayGeom/",NycSubwayGetGeog.as_view(),name="subway_geog"),
     path("neighborhoodInSubway/",FindNeighborhoodsInSubway.as_view(),name="neighborhood_in_subway"),

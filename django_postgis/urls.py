@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 import neighborhoods.views
 import streets.views
@@ -51,10 +51,11 @@ urlpatterns = [
     path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),
     path("subwayGeom/",NycSubwayGetGeog.as_view(),name="subway_geog"),
     path("neighborhoodInSubway/",FindNeighborhoodsInSubway.as_view(),name="neighborhood_in_subway"),
-    path("censusBlocks/",NycCensusBlocksListCreateAPIView.as_view(),name="census_blocks"),
-    path("censusBlocksPopulation/",NycCensusNeighPopulation.as_view(),name="census_neigh_population"),
+    #path("censusBlocks/",NycCensusBlocksListCreateAPIView.as_view(),name="census_blocks"),
+    #path("censusBlocksPopulation/",NycCensusNeighPopulation.as_view(),name="census_neigh_population"),
     path("censusSociodata/", NycCensusSociodataListCreateAPIView.as_view(), name="census_sociodata"),
-    path("nycPopulation/", NycPopulationAPIView.as_view(), name="nyc_population"),
+    #path("nycPopulation/", NycPopulationAPIView.as_view(), name="nyc_population"),
+    path('censusBlocks/', include('census_blocks.urls')),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
     path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),
 ]

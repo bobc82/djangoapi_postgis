@@ -19,7 +19,7 @@ from django.urls import path, include
 
 import neighborhoods.views
 import streets.views
-from neighborhoods.views import NycNeighborhoodListCreateAPIView, NycNeighborhoodDetail
+from neighborhoods.views import NycNeighborhoodListCreateAPIView, NycNeighborhoodDetail, NycSharedTopoElementsAsView
 from streets.views import NycStreetListCreateAPIView
 from streets.views import NycStreetLength
 from streets.views import NycStreetTotalLength
@@ -33,6 +33,7 @@ from subway_stations.views import FindNeighborhoodsInSubway
 from subway_stations.views import NycSubwayGetGeog
 from neighborhoods.views import NycNeighborhoodArea
 from neighborhoods.views import NycNeighborhoodIntersects
+from neighborhoods.views import NycSharedTopoElements
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
 
 urlpatterns = [
@@ -52,6 +53,8 @@ urlpatterns = [
     path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),
     path("subwayGeom/",NycSubwayGetGeog.as_view(),name="subway_geog"),
     path("neighborhoodInSubway/",FindNeighborhoodsInSubway.as_view(),name="neighborhood_in_subway"),
+    path("neighborhoodTopoElements/", NycSharedTopoElements.as_view(), name="neighborhood_topo_elements"),
+    path("neighborhoodTopoElementsView/", NycSharedTopoElementsAsView.as_view(), name="neighborhood_topo_elements_view"),
     #path("censusBlocks/",NycCensusBlocksListCreateAPIView.as_view(),name="census_blocks"),
     #path("censusBlocksPopulation/",NycCensusNeighPopulation.as_view(),name="census_neigh_population"),
     path("censusSociodata/", NycCensusSociodataListCreateAPIView.as_view(), name="census_sociodata"),

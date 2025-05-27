@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.contrib.postgres.fields import ArrayField
 from rest_framework import serializers
 
 # Create your models here.
@@ -25,3 +26,12 @@ class NycNeighborhoodSerializer(serializers.ModelSerializer):
         if obj.geom:
             return obj.geom.transform(4326, clone=True).geojson  # Convert to GeoJSON
         return None
+
+class NycSharedTopos(models.Model):
+    id = models.IntegerField(primary_key=True)
+    te = ArrayField(models.IntegerField())
+    array_agg = ArrayField(models.CharField(max_length=100))  # PostgreSQL ArrayField
+
+    class Meta:
+        managed = False
+        db_table = 'nyc_shared_topos'

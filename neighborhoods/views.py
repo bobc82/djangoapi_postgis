@@ -1,3 +1,4 @@
+from flask import request
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -5,6 +6,7 @@ from rest_framework.views import APIView
 
 from neighborhoods.models import NycNeighborhood
 from neighborhoods.models import NycNeighborhoodSerializer
+from neighborhoods.models import NycSharedTopos
 
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
@@ -12,6 +14,7 @@ from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.db.models.functions import Area
 from django.template import loader
 from django.http import HttpResponse
+from django.db import connection
 
 # Create your views here.
 
@@ -72,6 +75,37 @@ class NycNeighborhoodIntersects(APIView):
         print(neigh_intersects)
         return Response(neigh_intersects)
 
+class NycSharedTopoElements(APIView):
+    '''
+    SELECT te, array_agg(DISTINCT b.boroname)
+     FROM nyc_boros_t AS b, topology.GetTopoGeomelements(topo) AS te
+     GROUP BY te
+     HAVING count(DISTINCT b.boroname) > 1;
+    '''
+    def get(self, request):
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                        SELECT te, array_agg(DISTINCT b.boroname)
+                        FROM nyc_boros_t AS b, topology.GetTopoGeomelements(topo) AS te
+                        GROUP BY te
+                        HAVING count(DISTINCT b.boroname) > 1;
+                    """)
+            results = cursor.fetchall()
+            return Response({'results':results})
+
+class NycSharedTopoElementsAsView(APIView):
+    '''
+    CREATE VIEW nyc_shared_topos AS
+    SELECT te, array_agg(DISTINCT b.boroname)
+     FROM nyc_boros_t AS b, topology.GetTopoGeomelements(topo) AS te
+     GROUP BY te
+     HAVING count(DISTINCT b.boroname) > 1;
+     ---
+     SELECT * FROM nyc_shared_topos
+    '''
+    def get(self, request):
+        shared_topos = NycSharedTopos.objects.values_list('id', 'te', 'array_agg')
+        return Response(shared_topos)
 
 def map_neigh_view(request, id):
     neigh = NycNeighborhood.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)

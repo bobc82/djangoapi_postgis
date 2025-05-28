@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'streets',
     'subway_stations',
     'census_blocks',
-    'census_sociodata'
+    'census_sociodata',
+    'example_import.apps.ExampleImportConfig'
 ]
 
 MIDDLEWARE = [

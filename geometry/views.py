@@ -13,3 +13,5 @@ class GeometriesListCreateAPIView(APIView):
         listgeom = Geometries.objects.all()
         serializer = GeometriesSerializer(listgeom, many=True)
         return Response(serializer.data)
+
+

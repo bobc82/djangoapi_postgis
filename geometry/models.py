@@ -16,7 +16,13 @@ class Geometries(models.Model):
 
 
 class GeometriesSerializer(serializers.ModelSerializer):
+    srid = serializers.SerializerMethodField()
+
+    def get_srid(self, obj):
+        if obj.geom:
+            return obj.geom.srid
+        return None
 
     class Meta:
         model = Geometries
-        fields = ('id', 'name', 'geom')
+        fields = ('id', 'name', 'geom', 'srid')

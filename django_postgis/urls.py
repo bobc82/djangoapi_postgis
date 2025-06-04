@@ -35,6 +35,7 @@ from neighborhoods.views import NycNeighborhoodArea
 from neighborhoods.views import NycNeighborhoodIntersects
 from neighborhoods.views import NycSharedTopoElements
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
+from geometry.views import GeometriesListCreateAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -55,10 +56,8 @@ urlpatterns = [
     path("neighborhoodInSubway/",FindNeighborhoodsInSubway.as_view(),name="neighborhood_in_subway"),
     path("neighborhoodTopoElements/", NycSharedTopoElements.as_view(), name="neighborhood_topo_elements"),
     path("neighborhoodTopoElementsView/", NycSharedTopoElementsAsView.as_view(), name="neighborhood_topo_elements_view"),
-    #path("censusBlocks/",NycCensusBlocksListCreateAPIView.as_view(),name="census_blocks"),
-    #path("censusBlocksPopulation/",NycCensusNeighPopulation.as_view(),name="census_neigh_population"),
     path("censusSociodata/", NycCensusSociodataListCreateAPIView.as_view(), name="census_sociodata"),
-    #path("nycPopulation/", NycPopulationAPIView.as_view(), name="nyc_population"),
+    path("geometries/", GeometriesListCreateAPIView.as_view(), name="geometries"),
     path('censusBlocks/', include('census_blocks.urls')),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
     path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'subway_stations',
     'census_blocks',
     'census_sociodata',
+    'geometry',
     'example_import.apps.ExampleImportConfig'
 ]
 

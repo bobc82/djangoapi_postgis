@@ -13,3 +13,10 @@ class Geometries(models.Model):
 
     class Meta:
         db_table = 'geometries'
+
+
+class GeometriesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Geometries
+        fields = ('id', 'name', 'geom')

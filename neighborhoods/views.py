@@ -12,6 +12,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Transform
 from django.contrib.gis.db.models.functions import Area
+from django.db.models import Sum
 from django.template import loader
 from django.http import HttpResponse
 from django.db import connection
@@ -66,6 +67,25 @@ class NycNeighborhoodArea(APIView):
             return Response({'area': neigh_area[0].area.sq_m})
         else:
             return Response({'data': 'error', 'message':'No record match this name'}, status=status.HTTP_400_BAD_REQUEST)
+
+class NycNeighborhoodBoroArea(APIView):
+    '''
+      SELECT Sum(ST_Area(geom))
+      FROM nyc_neighborhoods
+      WHERE boroname = 'Manhattan';
+    '''
+    def post(self, request):
+        data = request.data
+        if "boroname" not in data:
+            return Response({'data':'error', 'message':'boroname field missing'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print(data)
+        neigh_area = NycNeighborhood.objects.filter(boroname=data["boroname"])[:1].annotate(area=Area('geom')).aggregate(Sum("area"))
+        print(neigh_area)
+        if neigh_area["area__sum"] is None:
+            return Response({"area__sum":None}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"area__sum":neigh_area["area__sum"].sq_m})
+
 
 class NycNeighborhoodIntersects(APIView):
     '''

@@ -31,7 +31,7 @@ from streets.views import NycStreetsNearestAll
 from subway_stations.views import NycSubwayStationsListCreateAPIView
 from subway_stations.views import FindNeighborhoodsInSubway
 from subway_stations.views import NycSubwayGetGeog
-from neighborhoods.views import NycNeighborhoodArea
+from neighborhoods.views import NycNeighborhoodArea, NycNeighborhoodBoroArea
 from neighborhoods.views import NycNeighborhoodIntersects
 from neighborhoods.views import NycSharedTopoElements
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
@@ -41,6 +41,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("neighborhoods/",NycNeighborhoodListCreateAPIView.as_view(),name="neighborhoods"),
     path("neighborhoodArea/",NycNeighborhoodArea.as_view(),name="neighborhood_area"),
+    path("neighborhoodBoroArea/",NycNeighborhoodBoroArea.as_view(),name="neighborhood_boro_area"),
     path("neighborhoodIntersects/",NycNeighborhoodIntersects.as_view(),name="neighborhood_intersects"),
     path("neighborhood/<int:pk>/",NycNeighborhoodDetail.as_view(),name="neighborhood"),
     path("streets/",NycStreetListCreateAPIView.as_view(),name="streets"),

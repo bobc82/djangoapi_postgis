@@ -38,9 +38,15 @@ class NycStreetLength(APIView):
       FROM nyc_streets
       WHERE name = 'Columbus Cir';
     '''
-    def get(self, request):
-        street_length = NycStreet.objects.filter(name="Pelham St")[:1].annotate(length=Length('geom'))
-        return Response({'l': street_length[0].length.m})
+    def post(self, request):
+        data = request.data
+        if "name" not in data:
+            return Response({"data":"error", "message":"name field missing"}, status=status.HTTP_400_BAD_REQUEST)
+        street_length = NycStreet.objects.filter(name=data["name"])[:1].annotate(length=Length('geom'))
+        if len(street_length) > 0:
+            return Response({'l': street_length[0].length.m})
+        else:
+            return Response({'data': 'error', 'message':'No record match this name'}, status=status.HTTP_400_BAD_REQUEST)
 
 class NycStreetTotalLength(APIView):
     '''

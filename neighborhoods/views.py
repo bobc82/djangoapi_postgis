@@ -55,13 +55,17 @@ class NycNeighborhoodArea(APIView):
       FROM nyc_neighborhoods
       WHERE name = 'West Village';
     '''
-    def get(self, request):
-        neigh_area = NycNeighborhood.objects.filter(name="West Village")[:1].annotate(area=Area('geom'))
-        #neigh_area_p = 0
-        #for obj in neigh_area:
-        #    neigh_area_p = obj.area.sq_m
-        #return Response({'area':neigh_area_p})
-        return Response({'area': neigh_area[0].area.sq_m})
+    def post(self, request):
+        data = request.data
+        if "name" not in data:
+            return Response({'data':'error', 'message':'name field missing'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print(data)
+        neigh_area = NycNeighborhood.objects.filter(name=data["name"])[:1].annotate(area=Area('geom'))
+        if len(neigh_area) > 0:
+            return Response({'area': neigh_area[0].area.sq_m})
+        else:
+            return Response({'data': 'error', 'message':'No record match this name'}, status=status.HTTP_400_BAD_REQUEST)
 
 class NycNeighborhoodIntersects(APIView):
     '''

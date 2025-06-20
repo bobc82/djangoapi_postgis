@@ -17,18 +17,23 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
     <script>
-        var map = L.map('map').setView([40.758700379161006, -73.95652770996094], 13);
+        var raw_geom = '{{street.geog|escapejs}}'
+        var json_data = JSON.parse(raw_geom)
+        console.log(json_data)
+        if (json_data.type == "MultiLineString"){
+            console.log("MP" + json_data.coordinates[0][0][0])
+            var map = L.map('map').setView([json_data.coordinates[0][0][1], json_data.coordinates[0][0][0]], 13);
+        }
+        else{
+            var map = L.map('map').setView([40.758700379161006, -73.95652770996094], 13);
+        }
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        var raw_geom = '{{street.geog|escapejs}}'
-        console.log(raw_geom);
 
-        var json_data = JSON.parse(raw_geom)
-        console.log(json_data)
         var myStyle = {
             "color": "#0000ff",
             "weight": 10,

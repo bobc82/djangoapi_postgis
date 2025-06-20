@@ -14,4 +14,21 @@ class GeometriesListCreateAPIView(APIView):
         serializer = GeometriesSerializer(listgeom, many=True)
         return Response(serializer.data)
 
+'''
+In lavorazione - gest. funzioni spaziali non native con django model base
+class STNDims(Func):
+    function = 'ST_NDims'
+    output_field = IntegerField()
+
+class GeometriesListCreateAPIView(APIView):
+
+    def get(self, request):
+        print(request)
+        listgeom = Geometries.objects.annotate(ndims=STNDims(F('geom'))).values_list('ndims', flat=True)
+        #geojson = serialize('geojson', listgeom, geometry_field='geom', fields=('id', 'name', 'geom', 'ndims'))
+        #print(geojson)
+        #serializer = GeometriesSerializer(listgeom, many=True)
+        return Response(listgeom)
+'''
+
 

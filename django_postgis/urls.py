@@ -19,6 +19,7 @@ from django.urls import path, include
 
 import neighborhoods.views
 import streets.views
+import subway_stations.views
 from neighborhoods.views import NycNeighborhoodListCreateAPIView, NycNeighborhoodDetail, NycSharedTopoElementsAsView
 from streets.views import NycStreetListCreateAPIView
 from streets.views import NycStreetLength
@@ -62,4 +63,5 @@ urlpatterns = [
     path('censusBlocks/', include('census_blocks.urls')),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
     path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),
+    path('map/subway/<int:id>/', subway_stations.views.map_view, name='map_neigh'),
 ]

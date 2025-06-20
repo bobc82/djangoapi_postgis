@@ -7,6 +7,10 @@ from rest_framework.views import APIView
 from subway_stations.models import NycSubwayStations
 from subway_stations.models import NycSubwayStationsSerializer
 from neighborhoods.models import NycNeighborhood
+
+from django.contrib.gis.db.models.functions import Transform
+from django.template import loader
+from django.http import HttpResponse
 from django.db.models import F
 import json
 
@@ -62,3 +66,14 @@ class NycSubwayGetGeog(APIView):
         serializer = NycSubwayStationsSerializer(station_geog, many=False)
         print(serializer.data)
         return Response({'geog': json.loads(serializer.data['geog'])})
+
+def map_view(request, id):
+    subway = NycSubwayStations.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)
+    print(subway.__dict__)
+    serializer = NycSubwayStationsSerializer(subway)
+    print(serializer.data)
+    template = loader.get_template('subway.html')
+    context = {
+        'subway': serializer.data,
+    }
+    return HttpResponse(template.render(context, request))

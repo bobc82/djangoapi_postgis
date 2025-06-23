@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.gis.db import models
 from rest_framework import serializers
 from django.db.models import Func, F, IntegerField
+from django.contrib.gis.db.models.functions import Area, Perimeter
 
 
 # Create your models here.
@@ -19,6 +20,8 @@ class Geometries(models.Model):
 class GeometriesSerializer(serializers.ModelSerializer):
     srid = serializers.SerializerMethodField()
     ndims = serializers.SerializerMethodField()
+    area = serializers.SerializerMethodField()
+    perimeter = serializers.SerializerMethodField()
 
     def get_srid(self, obj):
         if obj.geom:
@@ -28,6 +31,16 @@ class GeometriesSerializer(serializers.ModelSerializer):
     def get_ndims(self, obj):
         return getattr(obj, 'ndims', None)
 
+    def get_area(self, obj):
+        if obj.geom:
+            return obj.geom.area
+        return None
+
+    def get_perimeter(self, obj):
+        if obj.geom:
+            return obj.geom.length
+        return None
+
     class Meta:
         model = Geometries
-        fields = ('id', 'name', 'geom', 'srid', 'ndims')
+        fields = ('id', 'name', 'geom', 'srid', 'ndims', 'area', 'perimeter')

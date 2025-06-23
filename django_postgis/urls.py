@@ -37,6 +37,7 @@ from neighborhoods.views import NycNeighborhoodIntersects
 from neighborhoods.views import NycSharedTopoElements
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
 from geometry.views import GeometriesListCreateAPIView
+from geometry.views import GeometriesListDimsAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

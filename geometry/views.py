@@ -25,3 +25,15 @@ class STNDims(Func):
 
 
 
+class GeometriesListSearchAPIView(APIView):
+
+    def get(self, request, **kwargs):
+        search_str = self.kwargs.get("search")
+        print(search_str)
+        listgeom = Geometries.objects.annotate(ndims=STNDims(F('geom'))).filter(name__icontains=search_str)
+        print(listgeom)
+        serializer = GeometriesSerializer(listgeom, many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+

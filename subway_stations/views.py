@@ -67,6 +67,16 @@ class NycSubwayGetGeog(APIView):
         print(serializer.data)
         return Response({'geog': json.loads(serializer.data['geog'])})
 
+class NycRoutesFromStations(APIView):
+    '''
+    SELECT DISTINCT routes
+    FROM nyc_subway_stations;
+    '''
+    def get(self, request):
+        routes = NycSubwayStations.objects.values('routes').distinct()
+        print(routes)
+        return Response(routes)
+
 def map_view(request, id):
     subway = NycSubwayStations.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)
     print(subway.__dict__)

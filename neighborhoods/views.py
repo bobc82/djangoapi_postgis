@@ -4,6 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from census_blocks.models import NycCensusBlocks
 from neighborhoods.models import NycNeighborhood
 from neighborhoods.models import NycNeighborhoodSerializer
 from neighborhoods.models import NycSharedTopos
@@ -130,6 +131,8 @@ class NycSharedTopoElementsAsView(APIView):
     def get(self, request):
         shared_topos = NycSharedTopos.objects.values_list('id', 'te', 'array_agg')
         return Response(shared_topos)
+
+
 
 def map_neigh_view(request, id):
     neigh = NycNeighborhood.objects.annotate(geog=Transform('geom', 4326)).get(gid=id)

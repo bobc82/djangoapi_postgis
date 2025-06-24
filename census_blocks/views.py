@@ -62,3 +62,18 @@ class NycCensusNeighPopulation(APIView):
             population_list.append({'name': n.name, 'population': census_blocks['popn_total__sum']})
 
         return Response(population_list)
+
+class NycCensusRacialMakeUp(APIView):
+    '''
+    SELECT
+      100.0*SUM(popn_white)/SUM(popn_total) AS white_pct,
+      100.0*SUM(popn_black)/SUM(popn_total) AS black_pct,
+      SUM(popn_total) AS popn_total
+    FROM nyc_census_blocks;
+    '''
+    def get(self, request):
+        racial_make_up = NycCensusBlocks.objects.all().aggregate(Sum('popn_total'), Sum('popn_white'), Sum('popn_black'))
+        r_make_up = {"white_pct": 100*(racial_make_up["popn_white__sum"]/racial_make_up["popn_total__sum"]),
+                     "black_pct": 100*(racial_make_up["popn_black__sum"]/racial_make_up["popn_total__sum"]),
+                     "popn_total": racial_make_up["popn_total__sum"]}
+        return Response(r_make_up)

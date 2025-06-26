@@ -29,7 +29,7 @@ from streets.views import NycStreetGeometryValue
 from streets.views import NycStreetsIntersectMeridian
 from streets.views import NycStreetsNearest
 from streets.views import NycStreetsNearestAll
-from subway_stations.views import NycSubwayStationsListCreateAPIView, NycRoutesFromStations
+from subway_stations.views import NycSubwayStationsListCreateAPIView, NycRoutesFromStations, NycPopulationFromTrainStop
 from subway_stations.views import FindNeighborhoodsInSubway
 from subway_stations.views import NycSubwayGetGeog
 from neighborhoods.views import NycNeighborhoodArea, NycNeighborhoodBoroArea
@@ -57,6 +57,7 @@ urlpatterns = [
     path("subwayStations/",NycSubwayStationsListCreateAPIView.as_view(),name="subway_stations"),
     path("subwayGeom/",NycSubwayGetGeog.as_view(),name="subway_geog"),
     path("subwayRoutes/",NycRoutesFromStations.as_view(),name="subway_routes"),
+    path("subwayPopulationTrainStop/",NycPopulationFromTrainStop.as_view(),name="subway_routes"),
     path("neighborhoodInSubway/",FindNeighborhoodsInSubway.as_view(),name="neighborhood_in_subway"),
     path("neighborhoodTopoElements/", NycSharedTopoElements.as_view(), name="neighborhood_topo_elements"),
     path("neighborhoodTopoElementsView/", NycSharedTopoElementsAsView.as_view(), name="neighborhood_topo_elements_view"),

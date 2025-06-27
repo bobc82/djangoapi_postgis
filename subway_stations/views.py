@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 
 from census_blocks.models import NycCensusBlocks
 from subway_stations.models import NycSubwayStations
@@ -94,8 +95,11 @@ class NycPopulationFromTrainStop(APIView):
       )
     WHERE strpos(s.routes,'A') > 0;
     '''
-    def get(self, request):
-        subway_stations = NycSubwayStations.objects.filter(routes__contains='A')
+    def get(self, request, **kwargs):
+        search_str = self.kwargs.get("route")
+        subway_stations = NycSubwayStations.objects.filter(routes__contains=search_str)
+        if len(subway_stations) == 0:
+            return Response({"code": 1, "message": "error"}, status=status.HTTP_400_BAD_REQUEST)
         popn_white_total = 0
         popn_black_total = 0
         popn_total_t = 0

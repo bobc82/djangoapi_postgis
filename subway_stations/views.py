@@ -25,6 +25,27 @@ class NycSubwayStationsListCreateAPIView(APIView):
         serializer = NycSubwayStationsSerializer(subways, many=True)
         return Response(serializer.data)
 
+class FindSubwaysInRoute(APIView):
+    '''
+    SELECT s.name, s.routes
+    FROM nyc_subway_stations AS s
+    JOIN nyc_neighborhoods AS n
+    ON ST_Contains(n.geom, s.geom)
+    WHERE n.name = 'Little Italy';
+    '''
+    def get(self, request):
+        neighborhoods = NycNeighborhood.objects.filter(name='Little Italy')
+        list_subways = []
+        for n in neighborhoods:
+            subway_stations = NycSubwayStations.objects.filter(geom__within=n.geom).values('name','routes')
+            for s in subway_stations:
+                dict_subway = {
+                    "subway_name": s["name"],
+                    "subway_routes": s["routes"]
+                }
+                list_subways.append(dict_subway)
+        return Response(list_subways)
+
 class FindNeighborhoodsInSubway(APIView):
     '''
     SELECT

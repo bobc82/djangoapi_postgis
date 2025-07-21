@@ -3,6 +3,8 @@
 The following Django api contains both rest endpoints and template endpoint with map template using this framework 
 for some examples: https://leafletjs.com
 
+# Little generic concepts for Django
+
 To create new empty Django project you can write at the prompt:
 
 ```
@@ -54,6 +56,8 @@ In the main django_postgis/urls.py you can view endpoints of these django API.
 To read data we added Serialized model (i.e. under NycNeighborhood there is the NycNeighborhoodSerializer). In NycNeighborhoodSerialized
 there is an adding field, that we named geom. This is useful to trasform data from geometry type in geography type (later we'll see that
 this will be useful to represent coordinates with couples of "latitude,longitude" for example to prepare data for insert to a map).
+
+# Execution of Django Api
 
 You could try to run djando api and execute a rest endpoint via Postman:
 

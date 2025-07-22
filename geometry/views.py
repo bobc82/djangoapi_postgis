@@ -4,8 +4,39 @@ from .models import GeometriesSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Func, F, IntegerField
+from rest_framework import status
+from rest_framework import serializers
+from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.types import OpenApiTypes
+
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
+class MyRequestSerializer(serializers.Serializer):
+    nome = serializers.CharField()
+
 
 # Create your views here.
+class SimulazioneAPIView(APIView):
+
+    @extend_schema(
+        #request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
+        summary="API futura: ricerca semantica",
+        description="Questa API restituirà risultati di ricerca basati su NLP.",
+        responses={200: OpenApiTypes.OBJECT},
+    )
+    def get(self, request):
+        return Response(status=501)  # 501 Not Implemented
+
+class SimulazionePostAPIView(APIView):
+
+    @extend_schema(
+        request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
+        summary="API Protetta - Richiede Token JWT",
+        description="Questa API restituirà risultati di ricerca basati su NLP. Solo per utenti con permesso `can_view_reports`",
+        responses={200: OpenApiTypes.OBJECT},
+    )
+    def post(self, request):
+        return Response(status=501)  # 501 Not Implemented
 
 class GeometriesListCreateAPIView(APIView):
 

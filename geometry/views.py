@@ -4,8 +4,20 @@ from .models import GeometriesSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Func, F, IntegerField
+from rest_framework import status
+
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
+class SimulazioneAPIView(APIView):
+
+    @extend_schema(
+        summary="API futura: ricerca semantica",
+        description="Questa API restituirà risultati di ricerca basati su NLP.",
+        responses={status.HTTP_200_OK},
+    )
+    def get(self, request):
+        return Response(status=501)  # 501 Not Implemented
 
 class GeometriesListCreateAPIView(APIView):
 

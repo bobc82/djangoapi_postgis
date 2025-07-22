@@ -39,7 +39,7 @@ from neighborhoods.views import NycSharedTopoElements
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
 from geometry.views import GeometriesListCreateAPIView
 from geometry.views import GeometriesListSearchAPIView
-from geometry.views import SimulazioneAPIView
+from geometry.views import SimulazioneAPIView, SimulazionePostAPIView
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
@@ -72,6 +72,7 @@ urlpatterns = [
     path("censusSociodata/", NycCensusSociodataListCreateAPIView.as_view(), name="census_sociodata"),
     path("geometries/", GeometriesListCreateAPIView.as_view(), name="geometries"),
     path("geometries/urlFutura/", SimulazioneAPIView().as_view(), name="esempio_non_implementata"),
+    path("geometries/urlFuturaPost/", SimulazionePostAPIView().as_view(), name="esempio_post_non_implementata"),
     path("geometries/<str:search>/", GeometriesListSearchAPIView.as_view(), name="geometries_search"),
     path('censusBlocks/', include('census_blocks.urls')),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),

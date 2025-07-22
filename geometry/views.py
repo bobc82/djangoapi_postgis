@@ -5,18 +5,35 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Func, F, IntegerField
 from rest_framework import status
+from rest_framework import serializers
 
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
+class MyRequestSerializer(serializers.Serializer):
+    nome = serializers.CharField()
+
 
 # Create your views here.
 class SimulazioneAPIView(APIView):
 
     @extend_schema(
+        #request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
         summary="API futura: ricerca semantica",
+        description="Questa API restituirà risultati di ricerca basati su NLP.",
+        responses={status.HTTP_200_OK, status.HTTP_400_BAD_REQUEST, status.HTTP_403_FORBIDDEN},
+    )
+    def get(self, request):
+        return Response(status=501)  # 501 Not Implemented
+
+class SimulazionePostAPIView(APIView):
+
+    @extend_schema(
+        request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
+        summary="API futura: ricerca semantica con parametri su POST request",
         description="Questa API restituirà risultati di ricerca basati su NLP.",
         responses={status.HTTP_200_OK},
     )
-    def get(self, request):
+    def post(self, request):
         return Response(status=501)  # 501 Not Implemented
 
 class GeometriesListCreateAPIView(APIView):

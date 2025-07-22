@@ -63,6 +63,23 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Documentazione API",
+    "DESCRIPTION": "Esempio di documentazione con autenticazione JWT",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    "SECURITY": [{"Bearer": []}],
+
+    "SECURITY_SCHEMES": {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",  # descrizione opzionale
+        }
+    },
+}
+
 ROOT_URLCONF = 'django_postgis.urls'
 
 TEMPLATES = [

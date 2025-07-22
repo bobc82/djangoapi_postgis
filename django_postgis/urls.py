@@ -40,8 +40,13 @@ from census_sociodata.views import NycCensusSociodataListCreateAPIView
 from geometry.views import GeometriesListCreateAPIView
 from geometry.views import GeometriesListSearchAPIView
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path("neighborhoods/",NycNeighborhoodListCreateAPIView.as_view(),name="neighborhoods"),
     path("neighborhoodArea/",NycNeighborhoodArea.as_view(),name="neighborhood_area"),
     path("neighborhoodBoroArea/",NycNeighborhoodBoroArea.as_view(),name="neighborhood_boro_area"),

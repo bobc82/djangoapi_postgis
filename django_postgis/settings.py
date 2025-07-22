@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'census_blocks',
     'census_sociodata',
     'geometry',
-    'example_import.apps.ExampleImportConfig'
+    'example_import.apps.ExampleImportConfig',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
 ROOT_URLCONF = 'django_postgis.urls'
 

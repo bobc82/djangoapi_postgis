@@ -22,6 +22,7 @@ class SimulazioneAPIView(APIView):
         #request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
         summary="API futura: ricerca semantica",
         description="Questa API restituirà risultati di ricerca basati su NLP.",
+        tags=["v1 - geometry"],
         responses={200: OpenApiTypes.OBJECT},
     )
     def get(self, request):
@@ -33,6 +34,19 @@ class SimulazionePostAPIView(APIView):
         request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
         summary="API Protetta - Richiede Token JWT",
         description="Questa API restituirà risultati di ricerca basati su NLP. Solo per utenti con permesso `can_view_reports`",
+        tags=["v1 - geometry"],
+        responses={200: OpenApiTypes.OBJECT},
+    )
+    def post(self, request):
+        return Response(status=501)  # 501 Not Implemented
+
+class SimulazionePostAPIViewFutura(APIView):
+
+    @extend_schema(
+        request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
+        summary="API Protetta - Richiede Token JWT - Versione 2",
+        description="Questa API restituirà risultati di ricerca basati su NLP. Solo per utenti con permesso `can_view_reports`",
+        tags=["v2 - geometry"],
         responses={200: OpenApiTypes.OBJECT},
     )
     def post(self, request):

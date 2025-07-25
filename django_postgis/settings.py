@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'census_sociodata',
     'geometry',
     'example_import.apps.ExampleImportConfig',
-    'drf_spectacular'
+    'drf_spectacular',
+    'django_api_versioning'
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,10 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
+    "TAGS": [
+        {"name": "v1 - geometry", "description": "Versione 1 delle future API Geometry"},
+        {"name": "v2 - geometry", "description": "Versione 2 delle future API Geometry"},
+    ],
     "TITLE": "Documentazione API",
     "DESCRIPTION": "Esempio di documentazione con autenticazione JWT",
     "VERSION": "1.0.0",
@@ -109,7 +114,7 @@ DATABASES = {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": "nyc",
         "USER": "postgres",
-        "PASSWORD": "admin",
+        "PASSWORD": "root",
         "HOST": "localhost",
         "PORT": "5432"
     }
@@ -159,3 +164,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GDAL_LIBRARY_PATH = "C:\\OSGeo4W\\bin\\gdal310.dll"
 GEOS_LIBRARY_PATH = "C:\\OSGeo4W\\bin\\geos_c.dll"
+
+API_BASE_PATH = "api/v{version}/"

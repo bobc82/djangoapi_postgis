@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.types import OpenApiTypes
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from django_api_versioning.decorators import endpoint
 
 class MyRequestSerializer(serializers.Serializer):
     nome = serializers.CharField()
@@ -22,6 +23,7 @@ class SimulazioneAPIView(APIView):
         #request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
         summary="API futura: ricerca semantica",
         description="Questa API restituirà risultati di ricerca basati su NLP.",
+        tags=["v1 - geometry"],
         responses={200: OpenApiTypes.OBJECT},
     )
     def get(self, request):
@@ -33,6 +35,20 @@ class SimulazionePostAPIView(APIView):
         request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
         summary="API Protetta - Richiede Token JWT",
         description="Questa API restituirà risultati di ricerca basati su NLP. Solo per utenti con permesso `can_view_reports`",
+        tags=["v1 - geometry"],
+        responses={200: OpenApiTypes.OBJECT},
+    )
+    def post(self, request):
+        return Response(status=501)  # 501 Not Implemented
+
+#Esempio versioning in doc OPENAPI per API da implementare
+class SimulazionePostAPIViewFutura(APIView):
+
+    @extend_schema(
+        request=MyRequestSerializer, #Ad esempio ho un JSON nel body nel caso di una richiesta POST
+        summary="API Protetta - Richiede Token JWT - Versione 2",
+        description="Questa API restituirà risultati di ricerca basati su NLP. Solo per utenti con permesso `can_view_reports`",
+        tags=["v2 - geometry"],
         responses={200: OpenApiTypes.OBJECT},
     )
     def post(self, request):
@@ -47,6 +63,18 @@ class GeometriesListCreateAPIView(APIView):
         serializer = GeometriesSerializer(listgeom, many=True)
         print(serializer.data)
         return Response(serializer.data)
+
+#Esempio versioning API implementata
+@endpoint("geometries/", version=2, backward=False, view_name="geometries_list_api")
+class GeometriesListCreateAPIViewV2(APIView):
+
+    def get(self, request):
+        print(request)
+        listgeom = Geometries.objects.annotate(ndims=STNDims(F('geom'))).all()
+        print(listgeom)
+        serializer = GeometriesSerializer(listgeom, many=True)
+        print(serializer.data)
+        return Response({"data": serializer.data, "versioning": "API futura V2"})
 
 
 #In lavorazione - gest. funzioni spaziali non native con django model base

@@ -37,11 +37,12 @@ from neighborhoods.views import NycNeighborhoodArea, NycNeighborhoodBoroArea
 from neighborhoods.views import NycNeighborhoodIntersects
 from neighborhoods.views import NycSharedTopoElements
 from census_sociodata.views import NycCensusSociodataListCreateAPIView
-from geometry.views import GeometriesListCreateAPIView
+from geometry.views import GeometriesListCreateAPIView, SimulazionePostAPIViewFutura
 from geometry.views import GeometriesListSearchAPIView
 from geometry.views import SimulazioneAPIView, SimulazionePostAPIView
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django_api_versioning.urls import urlpatterns as api_urlpatterns
 
 
 urlpatterns = [
@@ -73,9 +74,11 @@ urlpatterns = [
     path("geometries/", GeometriesListCreateAPIView.as_view(), name="geometries"),
     path("geometries/urlFutura/", SimulazioneAPIView().as_view(), name="esempio_non_implementata"),
     path("geometries/urlFuturaPost/", SimulazionePostAPIView().as_view(), name="esempio_post_non_implementata"),
+    path("geometries/urlFuturaPostV2/", SimulazionePostAPIViewFutura().as_view(), name="esempio_post_non_implementata_v2"),
     path("geometries/<str:search>/", GeometriesListSearchAPIView.as_view(), name="geometries_search"),
     path('censusBlocks/', include('census_blocks.urls')),
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
     path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),
     path('map/subway/<int:id>/', subway_stations.views.map_view, name='map_neigh'),
+    path('', include(api_urlpatterns)),
 ]

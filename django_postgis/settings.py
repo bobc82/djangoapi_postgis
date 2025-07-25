@@ -166,3 +166,5 @@ GDAL_LIBRARY_PATH = "C:\\OSGeo4W\\bin\\gdal310.dll"
 GEOS_LIBRARY_PATH = "C:\\OSGeo4W\\bin\\geos_c.dll"
 
 API_BASE_PATH = "api/v{version}/"
+API_MIN_VERSION = 1
+API_MAX_VERSION = 3

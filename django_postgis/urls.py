@@ -42,6 +42,7 @@ from geometry.views import GeometriesListSearchAPIView
 from geometry.views import SimulazioneAPIView, SimulazionePostAPIView
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django_api_versioning.urls import urlpatterns as api_urlpatterns
 
 
 urlpatterns = [
@@ -79,4 +80,5 @@ urlpatterns = [
     path('map/streets/<int:id>/', streets.views.map_view, name='map_streets'),
     path('map/neigh/<int:id>/', neighborhoods.views.map_neigh_view, name='map_neigh'),
     path('map/subway/<int:id>/', subway_stations.views.map_view, name='map_neigh'),
+    path('', include(api_urlpatterns)),
 ]

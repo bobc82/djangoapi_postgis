@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.types import OpenApiTypes
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from django_api_versioning.decorators import endpoint
 
 class MyRequestSerializer(serializers.Serializer):
     nome = serializers.CharField()
@@ -40,6 +41,7 @@ class SimulazionePostAPIView(APIView):
     def post(self, request):
         return Response(status=501)  # 501 Not Implemented
 
+#Esempio versioning in doc OPENAPI per API da implementare
 class SimulazionePostAPIViewFutura(APIView):
 
     @extend_schema(
@@ -61,6 +63,18 @@ class GeometriesListCreateAPIView(APIView):
         serializer = GeometriesSerializer(listgeom, many=True)
         print(serializer.data)
         return Response(serializer.data)
+
+#Esempio versioning API implementata
+@endpoint("geometries/", version=2, backward=False, view_name="geometries_list_api")
+class GeometriesListCreateAPIViewV2(APIView):
+
+    def get(self, request):
+        print(request)
+        listgeom = Geometries.objects.annotate(ndims=STNDims(F('geom'))).all()
+        print(listgeom)
+        serializer = GeometriesSerializer(listgeom, many=True)
+        print(serializer.data)
+        return Response({"data": serializer.data, "versioning": "API futura V2"})
 
 
 #In lavorazione - gest. funzioni spaziali non native con django model base
